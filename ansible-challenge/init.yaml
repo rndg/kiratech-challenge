@@ -1,0 +1,5 @@
+---
+- name: init instances
+  hosts: localhost
+  roles: 
+    - init-ec2

@@ -1,0 +1,10 @@
+---
+- name: start an instance with a public IP address
+  amazon.aws.ec2:
+    instance_type: t2.micro
+    image: ami-0d06de6bae4839627
+    wait: yes
+    count: 1
+    aws_region: eu-central-1
+    aws_access_key: {{ secrets.AWS_ACCESS_KEY }}
+    aws_secret_key: {{ secrets.AWS_SECRET_KEY }}

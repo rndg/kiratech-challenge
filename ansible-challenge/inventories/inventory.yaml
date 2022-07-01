@@ -1,0 +1,19 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_python_interpreter: /Users/lorenzorandazzo/Documents/kiratech-challenge/venv/bin/python3
+  children:
+    master:
+      hosts:
+    worker:
+      hosts:
+    k8s_nodes:
+      children:
+        master:
+        worker:
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: /Users/lorenzorandazzo/Documents/kiratech-challenge/certificates/kiratech-challenge.pem
+    aws_access_key:  {{ secrets.AWS_ACCESS_KEY }} 
+    aws_secret_key:  {{ secrets.AWS_SECRET_KEY }} 

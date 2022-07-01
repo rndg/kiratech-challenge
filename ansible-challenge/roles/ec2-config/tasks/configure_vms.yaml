@@ -1,0 +1,51 @@
+---
+- name: download dependendencies and repos for docker
+  shell: |
+          apt update -y
+          apt install -y apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+          apt update -y 
+
+- name: install docker
+  shell: |
+          apt-cache policy docker-ce
+          apt install -y docker-ce
+
+- name: configure kubelet cgroup driver
+  shell: |
+          cat <<EOF | sudo tee /etc/docker/daemon.json
+          {
+          "exec-opts": ["native.cgroupdriver=systemd"]
+          }
+          EOF
+
+- name: start docker
+  shell: |
+          systemctl enable --now docker
+          usermod -aG docker {{ ansible_user }}
+          systemctl restart docker
+
+- name: turn off swap memory
+  shell: |
+          swapoff -a
+
+- name: let iptables see bridged traffic
+  shell: |
+          sysctl net.bridge.bridge-nf-call-iptables=1
+
+- name: install and configure dependencies
+  shell: |
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+- name: Create kubernetes repo file
+  shell: |
+          cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          deb https://apt.kubernetes.io/ kubernetes-xenial main
+          EOF
+
+- name: install kubernetes
+  shell: |
+          apt update -y 
+          apt install -y kubelet=1.22.2-00 kubeadm=1.22.2-00 kubectl=1.22.2-00
+          sudo apt-mark hold kubelet kubeadm kubectl

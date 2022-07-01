@@ -2,23 +2,18 @@ all:
   hosts:
     localhost:
       ansible_connection: local
-    3.71.4.161:
-    18.192.100.62:
-    3.72.50.202:
+      ansible_python_interpreter: /Users/lorenzorandazzo/Documents/kiratech-challenge/venv/bin/python3
   children:
     master:
       hosts:
-        3.72.50.202:
     worker:
       hosts:
-        3.71.4.161:
-        18.192.100.62:
     k8s_nodes:
       children:
         master:
         worker:
   vars:
     ansible_user: ubuntu
-    ansible_ssh_private_key_file: /Users/lorenzorandazzo/Documents/kiratech-challenge/kiratech-challenge.pem
-    aws_ipv4_cidr: 172.31.16.0/20	
-    var1: pippo 
+    ansible_ssh_private_key_file: /Users/lorenzorandazzo/Documents/kiratech-challenge/certificates/kiratech-challenge.pem
+    aws_access_key:  {{ secrets.AWS_ACCESS_KEY }} 
+    aws_secret_key:  {{ secrets.AWS_SECRET_KEY }} 

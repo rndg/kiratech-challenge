@@ -1,0 +1,38 @@
+---
+- name: init instances
+  hosts: localhost
+  roles: 
+    - init-ec2
+
+- name: configure ec2 instances
+  hosts: master, worker
+  remote_user: {{ ansible_user }}
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles: 
+    - ec2-config
+
+- name: configure master 
+  hosts: master
+  remote_user: {{ ansible_user }}
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles: 
+    - cluster-config-master
+    
+- name: configure workers
+  hosts: worker
+  remote_user: {{ ansible_user }}
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles: 
+    - cluster-config-worker

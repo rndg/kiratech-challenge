@@ -1,6 +1,0 @@
----
-- name: configure cluster 
-  hosts: master
-  become: yes
-  roles: 
-    - cluster-config

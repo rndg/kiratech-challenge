@@ -1,6 +1,3 @@
 ---
-- name: setup kube users
-  include_tasks: setup_users.yaml
-
 - name: configure vms
   include_tasks: configure_vms.yaml

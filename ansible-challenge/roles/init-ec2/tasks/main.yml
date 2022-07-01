@@ -1,16 +1,83 @@
 ---
-- name: start an instance with a public IP address
+- name: start master node
   amazon.aws.ec2_instance:
-    name: "node"
+    name: "master"
     key_name: kiratech-challenge
-    instance_type: t2.medium
-    image_id: ami-0d06de6bae4839627
-    security_group: default
+    instance_type: t3.medium
+    image_id: ami-0c9354388bb36c088
+    security_group: kube-master
     network:
       assign_public_ip: true
+    state: started
     wait: yes
-    count: 3
+    count: 1
     aws_region: eu-central-1
-    aws_access_key:  #{{ secrets.AWS_ACCESS_KEY }}
-    aws_secret_key:  #{{ secrets.AWS_SECRET_KEY }}
-    
+    aws_access_key:  {{ aws_access_key }} 
+    aws_secret_key:  {{ aws_secret_key }}
+  register: ec2_master
+
+- name: start worker node 1
+  amazon.aws.ec2_instance:
+    name: "worker1"
+    key_name: kiratech-challenge
+    instance_type: t3.medium
+    image_id: ami-0c9354388bb36c088
+    security_group: kube-worker
+    network:
+      assign_public_ip: true
+    state: started
+    wait: yes
+    count: 1
+    aws_region: eu-central-1
+    aws_access_key:  {{ aws_access_key }}
+    aws_secret_key:  {{ aws_secret_key }}
+  register: ec2_worker1
+
+- name: start worker node 2
+  amazon.aws.ec2_instance:
+    name: "worker2"
+    key_name: kiratech-challenge
+    instance_type: t3.medium
+    image_id: ami-0c9354388bb36c088
+    security_group: kube-worker
+    network:
+      assign_public_ip: true
+    state: started
+    wait: yes
+    count: 1
+    aws_region: eu-central-1
+    aws_access_key:  {{ aws_access_key }}
+    aws_secret_key:  {{ aws_secret_key }}
+  register: ec2_worker2  
+
+- name: Add host master
+  add_host:
+    hostname: "{{ ec2_master.instances.0.network_interfaces.0.association.public_ip }}"
+    groups:
+      - master
+
+- name: Add host worker 1
+  add_host:
+    hostname: "{{ ec2_worker1.instances.0.network_interfaces.0.association.public_ip }}"
+    groups: 
+      - worker
+
+- name: Add host worker 2
+  add_host:
+    hostname: "{{ ec2_worker2.instances.0.network_interfaces.0.association.public_ip }}"
+    groups: 
+      - worker
+
+- name: debug m
+  debug: 
+    var: groups['master']
+
+- name: debug w
+  debug: 
+    var: groups['worker']
+
+
+
+
+
+

@@ -1,3 +1,0 @@
----
-- name: cluster
-  include_tasks: master.yaml

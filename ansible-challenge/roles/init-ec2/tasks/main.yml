@@ -12,8 +12,8 @@
     wait: yes
     count: 1
     aws_region: eu-central-1
-    aws_access_key:  {{ aws_access_key }} 
-    aws_secret_key:  {{ aws_secret_key }}
+    aws_access_key:  "{{ aws_access_key }}" 
+    aws_secret_key:  "{{ aws_secret_key }}"
   register: ec2_master
 
 - name: start worker node 1
@@ -29,8 +29,8 @@
     wait: yes
     count: 1
     aws_region: eu-central-1
-    aws_access_key:  {{ aws_access_key }}
-    aws_secret_key:  {{ aws_secret_key }}
+    aws_access_key:  "{{ aws_access_key }}"
+    aws_secret_key:  "{{ aws_secret_key }}"
   register: ec2_worker1
 
 - name: start worker node 2
@@ -46,8 +46,8 @@
     wait: yes
     count: 1
     aws_region: eu-central-1
-    aws_access_key:  {{ aws_access_key }}
-    aws_secret_key:  {{ aws_secret_key }}
+    aws_access_key:  "{{ aws_access_key }}"
+    aws_secret_key:  "{{ aws_secret_key }}"
   register: ec2_worker2  
 
 - name: Add host master

@@ -6,7 +6,7 @@
 
 - name: configure ec2 instances
   hosts: master, worker
-  remote_user: {{ ansible_user }}
+  remote_user: "{{ ansible_user }}"
   become: yes
   become_method: sudo
   become_user: root
@@ -17,7 +17,7 @@
 
 - name: configure master 
   hosts: master
-  remote_user: {{ ansible_user }}
+  remote_user: "{{ ansible_user }}"
   become: yes
   become_method: sudo
   become_user: root
@@ -28,7 +28,7 @@
     
 - name: configure workers
   hosts: worker
-  remote_user: {{ ansible_user }}
+  remote_user: "{{ ansible_user }}"
   become: yes
   become_method: sudo
   become_user: root

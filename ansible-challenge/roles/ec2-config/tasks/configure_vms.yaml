@@ -23,7 +23,7 @@
 - name: start docker
   shell: |
           systemctl enable --now docker
-          usermod -aG docker {{ ansible_user }}
+          usermod -aG docker ubuntu
           systemctl restart docker
 
 - name: turn off swap memory

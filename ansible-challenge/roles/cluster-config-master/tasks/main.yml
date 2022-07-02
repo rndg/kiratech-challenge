@@ -2,7 +2,7 @@
 - name: initialize the cluster
   shell: |
           kubeadm config images pull
-          kubeadm init 
+          kubeadm init --control-plane-endpoint "{{ groups['master'][0] }}:6443"
 
 - name: Get the token for joining the worker nodes
   shell: kubeadm token create  --print-join-command
@@ -17,18 +17,18 @@
 
 - name: create .kube directory
   become: yes
-  become_user: {{ ansible_user }}
+  become_user: "{{ ansible_user }}"
   shell: |
           mkdir -p $HOME/.kube
 
 - name: copies admin.conf to user's kube config
   become: yes
-  become_user: {{ ansible_user }}
+  become_user: "{{ ansible_user }}"
   shell: |
           sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
           sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 - name: install Pod network
   become: yes
-  become_user: {{ ansible_user }}
+  become_user: "{{ ansible_user }}"
   shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
